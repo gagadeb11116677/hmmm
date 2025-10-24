@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hmm Machine: A Collective Consciousness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Global & Reset --- */
+        :root {
+            --bg-primary: #0f0f1e;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-muted: #707070;
+            --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-glow: 0 0 20px rgba(102, 126, 234, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Animated Background --- */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top, #1b2735 0%, var(--bg-primary) 60%);
+            z-index: -2;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            animation: drift 20s linear infinite;
+            z-index: -1;
+        }
+        @keyframes drift {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Main Layout --- */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        header h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Card Component --- */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-5px);
+            box-shadow: var(--accent-glow);
+        }
+
+        /* --- Question & Answer Section --- */
+        #question-card {
+            text-align: center;
+        }
+        #question-text {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 500;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .typing-effect::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: var(--text-secondary);
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        #answer-textarea {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            resize: vertical;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #answer-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        /* --- Buttons --- */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* --- Community Answers Section --- */
+        #community-answers-section {
+            display: none; /* Hidden by default */
+        }
+        #community-answers-section.visible {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .answers-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        .answer-card {
+            background: var(--bg-card);
+            border-left: 3px solid #667eea;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-style: italic;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .answer-card:hover {
+            transform: translateX(5px);
+            background: var(--bg-card-hover);
+        }
+        .answer-card .author {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: normal;
+        }
+
+        /* --- Modals --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .close-modal-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close-modal-btn:hover {
+            color: var(--text-primary);
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+        .log-entry {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        .log-question {
+            font-weight: 600;
+            color: #a0c4ff;
+            margin-bottom: 0.5rem;
+        }
+        .log-answer {
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+        }
+        .log-timestamp {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        .empty-message {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>The Hmm Machine</h1>
+            <p>Sebuah ruang refleksi kolektif.</p>
+        </header>
+
+        <main>
+            <div id="question-card" class="card">
+                <p id="question-text" class="typing-effect">Memuat pertanyaan untukmu, Penjelajah...</p>
+            </div>
+
+            <div class="card">
+                <textarea id="answer-textarea" placeholder="Tuliskan pemikiranmu di sini. Biarkan ia mengalir."></textarea>
+                <div class="button-group" style="margin-top: 1.5rem;">
+                    <button id="submit-answer-btn" class="btn btn-primary">Bagikan Pemikiran</button>
+                    <button id="new-question-btn" class="btn btn-secondary">Pertanyaan Lain</button>
+                </div>
+            </div>
+
+            <div id="community-answers-section" class="card">
+                <h3 class="section-title">Pemikiran dari Penjelajah Lainnya</h3>
+                <div id="answers-grid" class="answers-grid">
+                    <!-- Community answers will be injected here -->
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 The Hmm Machine. Dibuat dengan rasa ingin tahu.</p>
+            <div class="button-group" style="margin-top: 1rem; justify-content: center;">
+                <button id="open-private-log-btn" class="btn btn-secondary">Log Pribadi</button>
+                <button id="open-collective-log-btn" class="btn btn-secondary">Log Kolektif</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Private Log Modal -->
+    <div id="private-log-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Log Pribadi</h2>
+                <button class="close-modal-btn" data-target="private-log-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="private-log-entries">
+                <!-- Entries will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Collective Log Modal -->
+    <div id="collective-log-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Log Kolektif</h2>
+                <button class="close-modal-btn" data-target="collective-log-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="collective-log-entries">
+                <!-- Entries will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Elements ---
+            const questionText = document.getElementById('question-text');
+            const answerTextarea = document.getElementById('answer-textarea');
+            const submitAnswerBtn = document.getElementById('submit-answer-btn');
+            const newQuestionBtn = document.getElementById('new-question-btn');
+            const communityAnswersSection = document.getElementById('community-answers-section');
+            const answersGrid = document.getElementById('answers-grid');
+
+            const openPrivateLogBtn = document.getElementById('open-private-log-btn');
+            const openCollectiveLogBtn = document.getElementById('open-collective-log-btn');
+            const privateLogModal = document.getElementById('private-log-modal');
+            const collectiveLogModal = document.getElementById('collective-log-modal');
+            const privateLogEntries = document.getElementById('private-log-entries');
+            const collectiveLogEntries = document.getElementById('collective-log-entries');
+
+            // --- Data ---
+            const questionData = [
+                {
+                    question: "Jika warna memiliki suara, apa warna kesunyian?",
+                    sampleAnswers: [
+                        { text: "Suara hujan di malam hari, pelan dan menenangkan.", author: "Penjelajah #42" },
+                        { text: "Bunyi dawai yang bergetar sangat rendah, hampir tak terdengar.", author: "Penjelajah #7" },
+                        { text: "Tidak ada suara sama sekali. Kesunyian adalah absensi.", author: "Penjelajah #19" }
+                    ]
+                },
+                {
+                    question: "Apa yang dipikirkan oleh lampu jalan saat malam tiba?",
+                    sampleAnswers: [
+                        { text: "Akhirnya, giliranku untuk menjaga mimpi-mimpi yang lewat.", author: "Penjelajah #88" },
+                        { text: "'Ah, semut lagi. Semoga tidak ada yang menabrakku malam ini.'", author: "Penjelajah #23" },
+                        { text: "Aku adalah saksi bisu dari ribuan kisah.", author: "Penjelajah #55" }
+                    ]
+                },
+                {
+                    question: "Jika waktu adalah lingkaran, di mana kita berada sekarang?",
+                    sampleAnswers: [
+                        { text: "Di titik di mana kita mulai melupakan bahwa ini adalah lingkaran.", author: "Penjelajah #101" },
+                        { text: "Di puncak, di lembah, di mana-mana. Kita adalah lingkaran itu sendiri.", author: "Penjelajah #3" },
+                        { text: "Di persimpangan antara penyesalan dan harapan.", author: "Penjelajah #64" }
+                    ]
+                },
+                {
+                    question: "Apakah mimpi adalah ingatan dari kehidupan lain?",
+                    sampleAnswers: [
+                        { text: "Atau mungkin, latihan untuk kehidupan yang akan datang.", author: "Penjelajah #12" },
+                        { text: "Mereka adalah percakapan antara bawah sadar dan jiwa.", author: "Penjelajah #77" },
+                        { text: "Saya lebih suka berpikir mereka adalah jendela ke dunia 'apa jika'.", author: "Penjelajah #91" }
+                    ]
+                },
+                {
+                    question: "Apa yang akan kamu lakukan jika kamu tahu pasti tidak akan gagal?",
+                    sampleAnswers: [
+                        { text: "Aku akan belajar terbang. Secara harfiah.", author: "Penjelajah #30" },
+                        { text: "Berbicara di depan orang banyak tentang ketakutan terbesarku.", author: "Penjelajah #5" },
+                        { text: "Mulai proyek yang selalu kutunda. Yang paling gila dan paling tidak masuk akal.", author: "Penjelajah #49" }
+                    ]
+                }
+            ];
+
+            let currentQuestionObj = null;
+
+            // --- Functions ---
+            function getRandomQuestion() {
+                const randomIndex = Math.floor(Math.random() * questionData.length);
+                return questionData[randomIndex];
+            }
+
+            function displayQuestion() {
+                currentQuestionObj = getRandomQuestion();
+                questionText.textContent = currentQuestionObj.question;
+                questionText.classList.add('typing-effect');
+                
+                // Reset UI
+                answerTextarea.value = '';
+                communityAnswersSection.classList.remove('visible');
+                submitAnswerBtn.disabled = false;
+            }
+
+            function displayCommunityAnswers() {
+                const allAnswers = [...currentQuestionObj.sampleAnswers];
+                const userAnswers = JSON.parse(localStorage.getItem('hmmCollectiveAnswers') || '{}');
+                if (userAnswers[currentQuestionObj.question]) {
+                    allAnswers.push(...userAnswers[currentQuestionObj.question]);
+                }
+
+                answersGrid.innerHTML = ''; // Clear previous answers
+                allAnswers.forEach(answer => {
+                    const card = document.createElement('div');
+                    card.className = 'answer-card';
+                    card.innerHTML = `
+                        "${answer.text}"
+                        <span class="author">- ${answer.author}</span>
+                    `;
+                    answersGrid.appendChild(card);
+                });
+            }
+
+            function saveToPrivateLog(question, answer) {
+                const log = JSON.parse(localStorage.getItem('hmmPrivateLog') || '[]');
+                const entry = {
+                    question: question,
+                    answer: answer,
+                    timestamp: new Date().toLocaleString('id-ID')
+                };
+                log.unshift(entry);
+                localStorage.setItem('hmmPrivateLog', JSON.stringify(log));
+            }
+
+            function saveToCollectiveLog(question, answer) {
+                const collectiveAnswers = JSON.parse(localStorage.getItem('hmmCollectiveAnswers') || '{}');
+                if (!collectiveAnswers[question]) {
+                    collectiveAnswers[question] = [];
+                }
+                collectiveAnswers[question].push({
+                    text: answer,
+                    author: "Penjelajah Anonim"
+                });
+                localStorage.setItem('hmmCollectiveAnswers', JSON.stringify(collectiveAnswers));
+            }
+
+            function displayLog(type, container) {
+                let log = [];
+                if (type === 'private') {
+                    log = JSON.parse(localStorage.getItem('hmmPrivateLog') || '[]');
+                } else {
+                    const collectiveAnswers = JSON.parse(localStorage.getItem('hmmCollectiveAnswers') || '{}');
+                    for (const question in collectiveAnswers) {
+                        collectiveAnswers[question].forEach(ans => {
+                            log.push({ question, answer: ans.text, author: ans.author });
+                        });
+                    }
+                }
+
+                container.innerHTML = ''; // Clear previous content
+                if (log.length === 0) {
+                    container.innerHTML = `<p class="empty-message">Log ini masih kosong.</p>`;
+                    return;
+                }
+
+                log.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'log-entry';
+                    if (type === 'collective') {
+                        entryDiv.innerHTML = `
+                            <p class="log-question">Q: ${entry.question}</p>
+                            <p class="log-answer">A: "${entry.answer}"</p>
+                            <p class="log-timestamp">- ${entry.author}</p>
+                        `;
+                    } else {
+                        entryDiv.innerHTML = `
+                            <p class="log-question">Q: ${entry.question}</p>
+                            <p class="log-answer">A: ${entry.answer}</p>
+                            <p class="log-timestamp">${entry.timestamp}</p>
+                        `;
+                    }
+                    container.appendChild(entryDiv);
+                });
+            }
+
+            function openModal(modalElement) {
+                modalElement.classList.add('active');
+            }
+
+            function closeModal(modalElement) {
+                modalElement.classList.remove('active');
+            }
+
+            // --- Event Listeners ---
+            submitAnswerBtn.addEventListener('click', () => {
+                const answer = answerTextarea.value.trim();
+                if (answer === "") {
+                    answerTextarea.focus();
+                    return;
+                }
+
+                // Save answers
+                saveToPrivateLog(currentQuestionObj.question, answer);
+                saveToCollectiveLog(currentQuestionObj.question, answer);
+
+                // Update UI
+                submitAnswerBtn.disabled = true;
+                displayCommunityAnswers();
+                communityAnswersSection.classList.add('visible');
+            });
+
+            newQuestionBtn.addEventListener('click', displayQuestion);
+
+            // Modal Logic
+            openPrivateLogBtn.addEventListener('click', () => {
+                displayLog('private', privateLogEntries);
+                openModal(privateLogModal);
+            });
+
+            openCollectiveLogBtn.addEventListener('click', () => {
+                displayLog('collective', collectiveLogEntries);
+                openModal(collectiveLogModal);
+            });
+
+            document.querySelectorAll('.close-modal-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const targetModalId = e.target.getAttribute('data-target');
+                    closeModal(document.getElementById(targetModalId));
+                });
+            });
+
+            // Close modal on overlay click
+            [privateLogModal, collectiveLogModal].forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+
+            // --- Initial Load ---
+            displayQuestion();
+        });
+    </script>
+</body>
+</html>
