@@ -7,12 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         /* --- Global & Reset --- */
         :root {
-            --bg-primary: #0f0f1e;
-            --bg-secondary: #1a1a2e;
+            --bg-primary: #0a0a14;
+            --bg-secondary: #141428;
             --bg-card: rgba(255, 255, 255, 0.03);
             --bg-card-hover: rgba(255, 255, 255, 0.06);
             --text-primary: #e0e0e0;
@@ -21,6 +22,8 @@
             --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --accent-glow: 0 0 20px rgba(102, 126, 234, 0.5);
             --border-color: rgba(255, 255, 255, 0.1);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
         }
 
         * {
@@ -48,6 +51,7 @@
             background: radial-gradient(ellipse at top, #1b2735 0%, var(--bg-primary) 60%);
             z-index: -2;
         }
+        
         body::after {
             content: '';
             position: fixed;
@@ -59,9 +63,109 @@
             animation: drift 20s linear infinite;
             z-index: -1;
         }
+        
         @keyframes drift {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        /* --- Floating Particles --- */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            display: block;
+            pointer-events: none;
+            opacity: 0;
+            animation: float-up 15s infinite;
+        }
+        
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 10s;
+        }
+        
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+        
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+            animation-duration: 14s;
+        }
+        
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: 0s;
+            animation-duration: 16s;
+        }
+        
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: 2s;
+            animation-duration: 18s;
+        }
+        
+        .particle:nth-child(6) {
+            left: 60%;
+            animation-delay: 4s;
+            animation-duration: 20s;
+        }
+        
+        .particle:nth-child(7) {
+            left: 70%;
+            animation-delay: 0s;
+            animation-duration: 12s;
+        }
+        
+        .particle:nth-child(8) {
+            left: 80%;
+            animation-delay: 2s;
+            animation-duration: 14s;
+        }
+        
+        .particle:nth-child(9) {
+            left: 90%;
+            animation-delay: 4s;
+            animation-duration: 16s;
+        }
+        
+        .particle::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        @keyframes float-up {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1.5);
+            }
         }
 
         /* --- Main Layout --- */
@@ -74,7 +178,24 @@
         header {
             text-align: center;
             margin-bottom: 3rem;
+            position: relative;
         }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: var(--accent-gradient);
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
         header h1 {
             font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 700;
@@ -83,10 +204,26 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
         }
+        
+        header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 3px;
+            opacity: 0.5;
+        }
+        
         header p {
             font-size: 1.1rem;
             color: var(--text-secondary);
+            margin-top: 1rem;
         }
 
         /* --- Card Component --- */
@@ -98,7 +235,26 @@
             padding: 2rem;
             margin-bottom: 2rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 0.7;
+        }
+        
         .card:hover {
             background: var(--bg-card-hover);
             transform: translateY(-5px);
@@ -108,7 +264,19 @@
         /* --- Question & Answer Section --- */
         #question-card {
             text-align: center;
+            position: relative;
         }
+        
+        #question-card::after {
+            content: '❝';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 3rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+        }
+        
         #question-text {
             font-size: clamp(1.2rem, 3vw, 1.8rem);
             font-weight: 500;
@@ -116,12 +284,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
         }
+        
         .typing-effect::after {
             content: '|';
             animation: blink 1s infinite;
             color: var(--text-secondary);
         }
+        
         @keyframes blink {
             0%, 50% { opacity: 1; }
             51%, 100% { opacity: 0; }
@@ -140,6 +313,7 @@
             resize: vertical;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
+        
         #answer-textarea:focus {
             outline: none;
             border-color: #667eea;
@@ -153,6 +327,7 @@
             justify-content: center;
             flex-wrap: wrap;
         }
+        
         .btn {
             padding: 0.8rem 2rem;
             font-size: 1rem;
@@ -162,27 +337,54 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
         .btn-primary {
             background: var(--accent-gradient);
             color: white;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
+        
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
+        
         .btn-secondary {
             background: transparent;
             color: var(--text-secondary);
             border: 1px solid var(--border-color);
         }
+        
         .btn-secondary:hover {
             background: var(--bg-card-hover);
             color: var(--text-primary);
             border-color: var(--text-secondary);
         }
+        
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -192,24 +394,44 @@
         #community-answers-section {
             display: none; /* Hidden by default */
         }
+        
         #community-answers-section.visible {
             display: block;
             animation: fadeIn 0.8s ease;
         }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         .section-title {
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
             text-align: center;
+            position: relative;
+            display: inline-block;
+            width: 100%;
         }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 2px;
+        }
+        
         .answers-grid {
             display: grid;
             gap: 1rem;
         }
+        
         .answer-card {
             background: var(--bg-card);
             border-left: 3px solid #667eea;
@@ -218,11 +440,32 @@
             font-style: italic;
             color: var(--text-secondary);
             transition: transform 0.3s ease, background 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+        
+        .answer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-gradient);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+        
+        .answer-card:hover::before {
+            transform: scaleY(1);
+        }
+        
         .answer-card:hover {
             transform: translateX(5px);
             background: var(--bg-card-hover);
         }
+        
         .answer-card .author {
             display: block;
             margin-top: 0.5rem;
@@ -248,10 +491,12 @@
             transition: opacity 0.3s ease, visibility 0.3s ease;
             padding: 1rem;
         }
+        
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
+        
         .modal-content {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -262,10 +507,24 @@
             overflow-y: auto;
             transform: scale(0.9);
             transition: transform 0.3s ease;
+            position: relative;
         }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 16px 16px 0 0;
+        }
+        
         .modal-overlay.active .modal-content {
             transform: scale(1);
         }
+        
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -273,50 +532,67 @@
             padding: 1.5rem 2rem;
             border-bottom: 1px solid var(--border-color);
         }
+        
         .modal-header h2 {
             font-size: 1.5rem;
             font-weight: 600;
         }
+        
         .close-modal-btn {
             background: none;
             border: none;
             color: var(--text-secondary);
             font-size: 2rem;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
+        
         .close-modal-btn:hover {
             color: var(--text-primary);
+            transform: rotate(90deg);
         }
+        
         .modal-body {
             padding: 2rem;
         }
+        
         .log-entry {
             margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
         }
+        
+        .log-entry:hover {
+            transform: translateX(5px);
+        }
+        
         .log-entry:last-child {
             border-bottom: none;
         }
+        
         .log-question {
             font-weight: 600;
             color: #a0c4ff;
             margin-bottom: 0.5rem;
         }
+        
         .log-answer {
             color: var(--text-secondary);
             white-space: pre-wrap;
         }
+        
         .log-timestamp {
             font-size: 0.8rem;
             color: var(--text-muted);
             margin-top: 0.5rem;
         }
+        
         .empty-message {
             text-align: center;
             color: var(--text-muted);
             font-style: italic;
+            padding: 2rem;
         }
 
         /* --- Footer --- */
@@ -326,10 +602,133 @@
             padding: 2rem;
             color: var(--text-muted);
             font-size: 0.9rem;
+            position: relative;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 1px;
+            background: var(--border-color);
+        }
+        
+        /* --- Inspirational Quote --- */
+        .inspiration-quote {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .inspiration-quote::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 6rem;
+            color: var(--primary-color);
+            opacity: 0.1;
+        }
+        
+        .inspiration-quote p {
+            font-style: italic;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .inspiration-quote .author {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: normal;
+        }
+        
+        /* --- Notification Toast --- */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast-icon {
+            color: var(--primary-color);
+        }
+        
+        .toast-message {
+            color: var(--text-primary);
+        }
+        
+        /* --- Loading Animation --- */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            #question-text {
+                font-size: 1.2rem;
+            }
+            
+            .modal-content {
+                max-height: 90vh;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Floating Particles -->
+    <div class="particles">
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+        <span class="particle"></span>
+    </div>
 
     <div class="container">
         <header>
@@ -338,6 +737,12 @@
         </header>
 
         <main>
+            <!-- Inspirational Quote -->
+            <div class="inspiration-quote">
+                <p id="inspiration-text">"Kebijaksanaan dimulai dengan keheranan."</p>
+                <span class="author">- Socrates</span>
+            </div>
+
             <div id="question-card" class="card">
                 <p id="question-text" class="typing-effect">Memuat pertanyaan untukmu, Penjelajah...</p>
             </div>
@@ -345,8 +750,14 @@
             <div class="card">
                 <textarea id="answer-textarea" placeholder="Tuliskan pemikiranmu di sini. Biarkan ia mengalir."></textarea>
                 <div class="button-group" style="margin-top: 1.5rem;">
-                    <button id="submit-answer-btn" class="btn btn-primary">Bagikan Pemikiran</button>
-                    <button id="new-question-btn" class="btn btn-secondary">Pertanyaan Lain</button>
+                    <button id="submit-answer-btn" class="btn btn-primary">
+                        <i class="fas fa-share"></i>
+                        Bagikan Pemikiran
+                    </button>
+                    <button id="new-question-btn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i>
+                        Pertanyaan Lain
+                    </button>
                 </div>
             </div>
 
@@ -361,8 +772,14 @@
         <footer>
             <p>&copy; 2024 The Hmm Machine. Dibuat dengan rasa ingin tahu.</p>
             <div class="button-group" style="margin-top: 1rem; justify-content: center;">
-                <button id="open-private-log-btn" class="btn btn-secondary">Log Pribadi</button>
-                <button id="open-collective-log-btn" class="btn btn-secondary">Log Kolektif</button>
+                <button id="open-private-log-btn" class="btn btn-secondary">
+                    <i class="fas fa-book"></i>
+                    Log Pribadi
+                </button>
+                <button id="open-collective-log-btn" class="btn btn-secondary">
+                    <i class="fas fa-users"></i>
+                    Log Kolektif
+                </button>
             </div>
         </footer>
     </div>
@@ -393,6 +810,12 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle toast-icon"></i>
+        <span class="toast-message">Pemikiran Anda telah disimpan!</span>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- DOM Elements ---
@@ -402,6 +825,7 @@
             const newQuestionBtn = document.getElementById('new-question-btn');
             const communityAnswersSection = document.getElementById('community-answers-section');
             const answersGrid = document.getElementById('answers-grid');
+            const inspirationText = document.getElementById('inspiration-text');
 
             const openPrivateLogBtn = document.getElementById('open-private-log-btn');
             const openCollectiveLogBtn = document.getElementById('open-collective-log-btn');
@@ -409,6 +833,9 @@
             const collectiveLogModal = document.getElementById('collective-log-modal');
             const privateLogEntries = document.getElementById('private-log-entries');
             const collectiveLogEntries = document.getElementById('collective-log-entries');
+            
+            const toast = document.getElementById('toast');
+            const toastMessage = toast.querySelector('.toast-message');
 
             // --- Data ---
             const questionData = [
@@ -451,7 +878,33 @@
                         { text: "Berbicara di depan orang banyak tentang ketakutan terbesarku.", author: "Penjelajah #5" },
                         { text: "Mulai proyek yang selalu kutunda. Yang paling gila dan paling tidak masuk akal.", author: "Penjelajah #49" }
                     ]
+                },
+                {
+                    question: "Jika pikiran adalah ruangan, apa bentuk ruangan pikiranmu?",
+                    sampleAnswers: [
+                        { text: "Sebuah perpustakaan tak berujung dengan buku-buku yang belum dibaca.", author: "Penjelajah #15" },
+                        { text: "Sebuah taman dengan pintu-pintu tersembunyi di balik pohon-pohon.", author: "Penjelajah #27" },
+                        { text: "Sebuah studio seni yang berantakan namun penuh dengan karya yang belum selesai.", author: "Penjelajah #63" }
+                    ]
+                },
+                {
+                    question: "Apa yang akan kamu katakan pada versi dirimu yang lebih muda?",
+                    sampleAnswers: [
+                        { text: "Teruslah bertanya, bahkan ketika orang lain berhenti mendengar.", author: "Penjelajah #21" },
+                        { text: "Ketakutanmu adalah kompas, bukan penjara.", author: "Penjelajah #38" },
+                        { text: "Waktu yang kamu habiskan untuk khawatir adalah waktu yang bisa kamu gunakan untuk hidup.", author: "Penjelajah #72" }
+                    ]
                 }
+            ];
+            
+            const inspirationalQuotes = [
+                { text: "Kebijaksanaan dimulai dengan keheranan.", author: "Socrates" },
+                { text: "Hanya dalam kegelapan kita dapat melihat bintang-bintang.", author: "Martin Luther King Jr." },
+                { text: "Imajinasi lebih penting daripada pengetahuan.", author: "Albert Einstein" },
+                { text: "Kita adalah apa yang kita lakukan berulang kali. Keunggulan bukanlah tindakan, melainkan kebiasaan.", author: "Aristoteles" },
+                { text: "Kehidupan adalah apa yang terjadi ketika Anda sibuk membuat rencana lain.", author: "John Lennon" },
+                { text: "Satu-satunya cara untuk melakukan pekerjaan hebat adalah dengan mencintai apa yang Anda lakukan.", author: "Steve Jobs" },
+                { text: "Perjalanan seribu mil dimulai dengan satu langkah.", author: "Lao Tzu" }
             ];
 
             let currentQuestionObj = null;
@@ -461,16 +914,45 @@
                 const randomIndex = Math.floor(Math.random() * questionData.length);
                 return questionData[randomIndex];
             }
+            
+            function getRandomQuote() {
+                const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
+                return inspirationalQuotes[randomIndex];
+            }
 
             function displayQuestion() {
                 currentQuestionObj = getRandomQuestion();
-                questionText.textContent = currentQuestionObj.question;
+                
+                // Add typing effect
+                questionText.classList.remove('typing-effect');
+                void questionText.offsetWidth; // Trigger reflow
                 questionText.classList.add('typing-effect');
+                
+                // Clear and set new question
+                questionText.textContent = '';
+                typeWriter(currentQuestionObj.question, questionText, 50);
                 
                 // Reset UI
                 answerTextarea.value = '';
                 communityAnswersSection.classList.remove('visible');
                 submitAnswerBtn.disabled = false;
+                
+                // Update inspirational quote
+                const quote = getRandomQuote();
+                inspirationText.textContent = `"${quote.text}"`;
+                inspirationText.nextElementSibling.textContent = `- ${quote.author}`;
+            }
+            
+            function typeWriter(text, element, speed) {
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                type();
             }
 
             function displayCommunityAnswers() {
@@ -481,14 +963,27 @@
                 }
 
                 answersGrid.innerHTML = ''; // Clear previous answers
-                allAnswers.forEach(answer => {
-                    const card = document.createElement('div');
-                    card.className = 'answer-card';
-                    card.innerHTML = `
-                        "${answer.text}"
-                        <span class="author">- ${answer.author}</span>
-                    `;
-                    answersGrid.appendChild(card);
+                
+                // Add animation to each answer card
+                allAnswers.forEach((answer, index) => {
+                    setTimeout(() => {
+                        const card = document.createElement('div');
+                        card.className = 'answer-card';
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(20px)';
+                        card.innerHTML = `
+                            "${answer.text}"
+                            <span class="author">- ${answer.author}</span>
+                        `;
+                        answersGrid.appendChild(card);
+                        
+                        // Animate card appearance
+                        setTimeout(() => {
+                            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    }, index * 100);
                 });
             }
 
@@ -534,32 +1029,55 @@
                     return;
                 }
 
-                log.forEach(entry => {
-                    const entryDiv = document.createElement('div');
-                    entryDiv.className = 'log-entry';
-                    if (type === 'collective') {
-                        entryDiv.innerHTML = `
-                            <p class="log-question">Q: ${entry.question}</p>
-                            <p class="log-answer">A: "${entry.answer}"</p>
-                            <p class="log-timestamp">- ${entry.author}</p>
-                        `;
-                    } else {
-                        entryDiv.innerHTML = `
-                            <p class="log-question">Q: ${entry.question}</p>
-                            <p class="log-answer">A: ${entry.answer}</p>
-                            <p class="log-timestamp">${entry.timestamp}</p>
-                        `;
-                    }
-                    container.appendChild(entryDiv);
+                log.forEach((entry, index) => {
+                    setTimeout(() => {
+                        const entryDiv = document.createElement('div');
+                        entryDiv.className = 'log-entry';
+                        entryDiv.style.opacity = '0';
+                        entryDiv.style.transform = 'translateY(20px)';
+                        
+                        if (type === 'collective') {
+                            entryDiv.innerHTML = `
+                                <p class="log-question">Q: ${entry.question}</p>
+                                <p class="log-answer">A: "${entry.answer}"</p>
+                                <p class="log-timestamp">- ${entry.author}</p>
+                            `;
+                        } else {
+                            entryDiv.innerHTML = `
+                                <p class="log-question">Q: ${entry.question}</p>
+                                <p class="log-answer">A: ${entry.answer}</p>
+                                <p class="log-timestamp">${entry.timestamp}</p>
+                            `;
+                        }
+                        container.appendChild(entryDiv);
+                        
+                        // Animate entry appearance
+                        setTimeout(() => {
+                            entryDiv.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            entryDiv.style.opacity = '1';
+                            entryDiv.style.transform = 'translateY(0)';
+                        }, 50);
+                    }, index * 100);
                 });
             }
 
             function openModal(modalElement) {
                 modalElement.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
             }
 
             function closeModal(modalElement) {
                 modalElement.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+            
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
             }
 
             // --- Event Listeners ---
@@ -570,17 +1088,38 @@
                     return;
                 }
 
-                // Save answers
-                saveToPrivateLog(currentQuestionObj.question, answer);
-                saveToCollectiveLog(currentQuestionObj.question, answer);
-
-                // Update UI
+                // Show loading state
+                submitAnswerBtn.innerHTML = '<span class="loading-spinner"></span> Menyimpan...';
                 submitAnswerBtn.disabled = true;
-                displayCommunityAnswers();
-                communityAnswersSection.classList.add('visible');
+
+                // Simulate network delay
+                setTimeout(() => {
+                    // Save answers
+                    saveToPrivateLog(currentQuestionObj.question, answer);
+                    saveToCollectiveLog(currentQuestionObj.question, answer);
+
+                    // Update UI
+                    submitAnswerBtn.innerHTML = '<i class="fas fa-share"></i> Bagikan Pemikiran';
+                    submitAnswerBtn.disabled = true;
+                    displayCommunityAnswers();
+                    communityAnswersSection.classList.add('visible');
+                    
+                    // Show toast notification
+                    showToast("Pemikiran Anda telah disimpan!");
+                }, 1000);
             });
 
-            newQuestionBtn.addEventListener('click', displayQuestion);
+            newQuestionBtn.addEventListener('click', () => {
+                // Add rotation animation to button
+                newQuestionBtn.querySelector('i').style.transition = 'transform 0.5s ease';
+                newQuestionBtn.querySelector('i').style.transform = 'rotate(360deg)';
+                
+                setTimeout(() => {
+                    newQuestionBtn.querySelector('i').style.transform = 'rotate(0deg)';
+                }, 500);
+                
+                displayQuestion();
+            });
 
             // Modal Logic
             openPrivateLogBtn.addEventListener('click', () => {
@@ -607,6 +1146,24 @@
                         closeModal(modal);
                     }
                 });
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + Enter to submit answer
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !submitAnswerBtn.disabled) {
+                    submitAnswerBtn.click();
+                }
+                
+                // Escape to close modals
+                if (e.key === 'Escape') {
+                    if (privateLogModal.classList.contains('active')) {
+                        closeModal(privateLogModal);
+                    }
+                    if (collectiveLogModal.classList.contains('active')) {
+                        closeModal(collectiveLogModal);
+                    }
+                }
             });
 
             // --- Initial Load ---
